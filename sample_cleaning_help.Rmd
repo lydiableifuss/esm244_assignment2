@@ -1,0 +1,192 @@
+---
+title: "sample_cleaning_help"
+author: "Lydia Bleifuss"
+date: "2/16/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+#To have messages or warnings not show up, add this to the echo chunk (universal accross the .rmd)
+```
+
+```{r}
+#Helpful Packages
+library(tidyverse)
+library(janitor)
+library(here)
+library(readxl)
+library(kableExtra)
+library(skimr)
+library(naniar)
+library(VIM)
+library(ggfortify)
+library(lubridate)
+library(tsibble)
+```
+
+```{r}
+#Reading in tips
+#For .csvs, always use read_csv, NOT read.csv (read. will mess up data)
+#example: ca_pb <- read_csv(here::here("data","ca_pollution_burden.csv"))
+
+#Here is helpful in having a more flexible file path. Use "here::here" because some other packages have a here function and don't want R to get confused. 
+
+#Exporting a csv
+#write_csv
+```
+
+
+```{r}
+#Helpful Functions
+
+Clean Names
+#clean_names() (puts every col name in lower case with _ seps rather than spaces))
+
+Rename
+#use this to rename columns
+#example: rename(region = US_L3NAME)
+
+Mutate
+#mutate (can overright or create new columns in dataframe)
+  #mutate(colname = function(colname))
+
+#mutate a column with funciton: str_to_lower to make all letters lower case
+#mutate a column with parse function: parse_number (keeps only numbers in column)
+#mutate a column with str_remove and identify what you want removed
+   #mutate(colname_new = str_remove(colname, pattern="acre-feet"))
+
+Filter
+#filter (can take out or keep rows based on certain criteria)
+#use == if you want to match 
+#use > or < if you want to be greater or less than particular value
+
+#filter a column with str_detect to identify what you want kept in a column (or not with !)
+  #filter(str_detect(col_name, pattern="well_id"))
+  #filter(!str_detect(state, pattern = "new_york"))
+
+#filter with OR statement
+#example: filter(sex %in% c("male", "female")) 
+  #we want to only KEEP rows that say male or female in   the sex column and exclude anything else. The %in%      opperator is a more elegant "or" statement, "look for   anything in sex column that matches anything in this    string, other way to do this is: filter (sex == "male"   | sex = "female))
+
+Select
+#similar to filter but a few different options here
+#example: 
+#ca_pb_nopct <- ca_pb %>% 
+  #clean_names() %>% #makes everyting lower case and snake case 
+  #select(-contains("perc")) %>% #use minus to exclude things rather then select or keep only those, use ! if you want "do not match"
+  #select(-contains("pctl")) %>% 
+  #select(-latitude, -longitude)
+
+
+Separate
+#separate a column to divide up numbers, characters, etc.
+  #separate(colname, into = c("acre_feet","well_id"), sep=",")
+
+Head, Tail
+#use head and tail to get rid of rows at top and bottom of dataframes
+  #example: 
+  #if I only want to head the first top lines in a function, we can do "head(30)" to keep first 30 and "tai(10)" to keep last 10 lines
+  #salmon_first_5 <- salmon_summary %>% 
+    #head(5)
+
+Drop NA
+#removes any observation with any NA values (removes any row that have a missing variable)
+#example: ca_pb_nona <- ca_pb_subset %>%
+  #drop_na()
+
+Full Join
+#use this to combine dataframes
+#example: penguins <- full_join(chinstrap, gentoo) #basically put in tidy format, just added one dataframe on top of the other
+#example: tule_join <- full_join(gw_data_measure, gw_data_stations, by = "stn_id") #joining by site ID
+
+Binary Values
+#example: 
+#penguin_bin <- penguins %>% 
+  #mutate(
+    #sp_binary = case_when(#creating something that is conditional on something else (this is where we are using if-then statements)
+    #species == "Chinstrap penguin (Pygoscelis antarctica)" ~ 1,
+   # species == "Gentoo penguin (Pygoscelis papua)" ~ 0)
+    #T ~ "cool") # (~) means as a function of, this is an if-then statment, "T ~ "cool" which means if anything else is true/there, then label it cool (we don't have anything else but included for notes)
+ # )
+
+```
+
+```{r}
+#Helpful data exploring functions
+
+Summarize
+#summarize
+  #first use group_by to indicate what you want to look at, then can summarize different factors
+  #example: 
+  #salmon_summary <- salmon_landings %>% 
+  #group_by(year,species) %>% 
+  #summarize(
+    #tot_landings = sum(landings_pounds), 
+    #tot_value = sum(dollars_num)
+ # )
+
+Summary
+#use summary to see where there are NA values
+#example: summary(ca_pb_subset) 
+
+Skim
+#awesome summary!
+#example: skim(ca_gama) 
+
+GG Missing Variable 
+#shows which variables ahve the most missingness, in this case it is "linguistic isolation"
+#example: gg_miss_var(ca_pb_subset)
+
+Matrix Plot
+#higher values are darker and red indicates NAs, can also sort by a specific variable, in this case, well depth 
+#example: matrixplot(ca_gama)
+#example: matrixplot(ca_gama, sortby = "well_depth_m") 
+
+Plot
+#great initial vizualization that R handles well 
+
+```
+
+```{r}
+#Working with Dates
+
+Lubridate
+#lubridate is usually the way to go
+#check what class date is before trying to convert and seperate
+  #example: 
+
+renew_date <- renew_clean %>% 
+  mutate(yr_mo_day = lubridate::parse_date_time(yyyymm, "ym")) %>%  #give it the structure of the colum and formate
+  mutate(month_sep = yearmonth(yr_mo_day)) %>% #now converting to SIBBLE format because FEAST AND FORMAT wants it with SIBBLE, month_sep is stored as a DATE and YEARMON which is great for time series stuff later
+  mutate(value = as.numeric(value)) %>%  #value was read in as a character
+  drop_na(month_sep, value) #where month_sep OR value has an NA, get rid of that row
+
+#Make a version where I have the month & year in separate colums: 
+renew_parsed <- renew_date %>% 
+  mutate(month = month(yr_mo_day, label = TRUE)) %>% #label = true means that the new month is a class of ordered factor that has the month abbreviations
+  mutate(year = year(yr_mo_day)) 
+```
+
+
+
+
+```{r}
+#Random Tips
+
+#= is assigning, and == is asking if this matches that and then true or false back
+
+#numbers don't need quotations around them because they are numbers and not character strings
+
+#in console, type "class(df$column)" to understand what class the column was read in as
+
+#in console, type "unique(df$column)" to unerstand what unique values exist in that column 
+
+#use distinct(column, .keep_all = TRUE) at the end of any summary stats to keep only distince values (i.e., if you calculate median across months for all years, just keep one of each month beause all April's now have the same median)
+
+#View(palettes_d_names)
+#View(palettes_c_names)
+#example: scale_color_paletteer_c("ggthemes::Orange-Blue Diverging")
+```
+

@@ -1,0 +1,25 @@
+---
+title: "Open Science Perspective"
+author: "Lydia Bleifuss"
+date: "2/16/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+###Task 1:
+
+##### Lydia perspective on "open science" and the two assigned publications. 
+
+“Open science” encompasses an array of possible practices not only within the production of scientific analyses, but also within the review and distribution of results. I find several contrasting ideas framed in these articles fascinating, but want to first highlight that the Mckiernan piece incorporated noticeably more in-text citations as opposed to the Bahlai article. In reading these pieces, it is difficult to know to what extent I may have conflated my trust in more heavily cited work with how much I agreed with McKiernan’s over Bahlai’s “open science” stances. An additional overarching point of contrast between the two publications is how “open science '' is defined. McKiernan explains that “open science” can mean incorporating “open science” practices into any step including data collection, analysis, writing, reviewing and publishing. Bahlai argues that conversely, the “open science” definition is limiting and not empathetic to the institutional pressures of scientific research. 
+
+Generally, “open science” is driven not only by the desire to ensure scientific work is reproducible, but also to stimulate more academic discoveries and research through collaboration and accessibility of data and results. Young scientists especially may be concerned that without data privacy, they lose the competitive advantage of being the only person/group with unique and valuable information. However, McKiernan argues that it is these young scientists who are just embarking on long careers that can benefit greatly from open data and methods due to increased collaboration, press attention and ultimately funding that is stimulated from openness. In fact, McKiernan points out that an increasingly more funding sources are beginning to require some level of open access. I think that the arguments regarding open review are the most interesting. McKiernan explains that open review and commentary would incentivize more thoughtful and robust review, while Bahlai argues that less robust commentary and review would occur out of fear of being incorrect publicly. 
+
+To me, ensuring research is reproducible requires intensive workflow documentation that not only illustrates what was successful, but also succinctly identifies what was not successful and why. Reproducibility in any data analysis should be central to the process not only for your own purposes (i.e. saving time if/when backtracking is necessary), but also because openness about precise analysis methods displays confidence in the work. Limitations that I have experienced in incorporating “open science” into my own research reproducibility and workflow relate to the different data analysis platforms different people/groups rely heavily on (i.e. Excel), and not always feeling that I am in the position to strongly advocate for a shift to other platforms (i.e. R or other coding platform). 
+ 
+
+McKiernan, E.C. et al. (2016). How open science helps researchers succeed. eLife. 2016; 5: e16800. doi: 10.7554/eLife.16800. https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4973366/
+
+Bahlai, C. et al (2018). Open Science Isn't Always Open to All Scientists. American Scientist. https://www.americanscientist.org/article/open-science-isnt-always-open-to-all-scientists 
